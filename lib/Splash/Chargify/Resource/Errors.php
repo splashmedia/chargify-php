@@ -10,6 +10,8 @@
 
 namespace Splash\Chargify\Resource;
 
+use Splash\Chargify\ResponseHydrator;
+
 class Errors extends ResourceAbstract {
     public $errors = array();
     
