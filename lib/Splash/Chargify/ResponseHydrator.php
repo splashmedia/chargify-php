@@ -19,10 +19,11 @@ class ResponseHydrator {
     }
 
     public function hydrate($data, $depth = -1) {
-
+        if (!is_array($data)) return $data;
+        
         $resp = array();
         foreach ((array)$data as $key => $value) {
-            $cls = "Splash\\Chargify\\Resource\\" . $this->normalizeClassName($key);
+            $cls = $this->normalizeClassName($key);
 
             if (class_exists($cls))
                 $resp[$key] = $cls::hydrate($value, $this);
@@ -40,6 +41,6 @@ class ResponseHydrator {
 
 
     protected function normalizeClassName($key) {
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
+        return "Splash\\Chargify\\Resource\\" . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
     }
 }
