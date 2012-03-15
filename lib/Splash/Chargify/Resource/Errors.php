@@ -14,11 +14,13 @@ class Errors extends ResourceAbstract {
     public $errors = array();
     
     public function getName() { return 'errors'; }
-    public static function hydrate($data) {
+    public static function hydrate($data, ResponseHydrator $hydator) {
         $obj = new self();
         
         foreach ($data as $error) {
             $obj->errors[] = $error;
         }
+        
+        return $obj;
     }
 }
