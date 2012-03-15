@@ -86,8 +86,6 @@ class Client {
 
         $body = json_decode($body, true);
 
-        curl_close($ch);
-
         return $this->getHydrator()->hydrate($body);
     }
 
