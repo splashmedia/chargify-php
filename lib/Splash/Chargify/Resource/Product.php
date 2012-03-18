@@ -11,6 +11,7 @@
 namespace Splash\Chargify\Resource;
 
 class Product extends ResourceAbstract {
+    public $id;
     public $price_in_cents;
     public $name;
     public $handle;
@@ -29,8 +30,20 @@ class Product extends ResourceAbstract {
     public $return_params;
     public $require_credit_card;
     public $request_credit_card;
+
+    /**
+     * @var \DateTime
+     */
     public $created_at;
+
+    /**
+     * @var \DateTime
+     */
     public $updated_at;
+
+    /**
+     * @var \DateTime
+     */
     public $archived_at;
 
     public function getName() { return 'product'; }
