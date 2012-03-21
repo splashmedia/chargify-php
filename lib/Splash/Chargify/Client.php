@@ -53,6 +53,10 @@ class Client {
         $ch = $this->getCurl();
         $url = sprintf('https://%s.chargify.com/%s', $this->getDomain(), ltrim($uri, '/'));
 
+        if (!empty($data) && $method == 'GET') {
+            $url .= "?" . http_build_query($data);
+        }
+
         curl_setopt_array($ch, array(
             CURLOPT_URL        => $url,
             CURLOPT_USERPWD    => sprintf("%s:x", $this->getApiKey()),
