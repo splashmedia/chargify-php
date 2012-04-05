@@ -39,8 +39,8 @@ class Client {
         $this->setHydrator(new ResponseHydrator());
     }
 
-    public function api($uri, $data = array(), $method = 'GET') {
-        return $this->_execute_request($uri, $data, $method);
+    public function api($uri, $data = array(), $method = 'GET', $hydrate=true) {
+        return $this->_execute_request($uri, $data, $method, $hydrate);
     }
 
     /**
@@ -49,7 +49,7 @@ class Client {
      * @param string $method
      * @return Client\Response
      */
-    protected function _execute_request($uri, $data = array(), $method = 'GET') {
+    protected function _execute_request($uri, $data = array(), $method = 'GET', $hydrate=true) {
         $ch = $this->getCurl();
         $url = sprintf('https://%s.chargify.com/%s', $this->getDomain(), ltrim($uri, '/'));
 
@@ -90,7 +90,11 @@ class Client {
 
         $body = json_decode($body, true);
 
-        return $this->getHydrator()->hydrate($body);
+        if ( $hydrate ) {
+            return $this->getHydrator()->hydrate($body);
+        } else {
+            return $body;
+        }
     }
 
 
