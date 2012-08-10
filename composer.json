@@ -1,5 +1,5 @@
 {
-    "name": "splash/php-chargify",
+    "name": "splash/chargify-php",
     "type": "library",
     "description": "Chargify PHP API wrapper",
     "keywords": ["chargify", "payment", "credit card"],
