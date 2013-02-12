@@ -4,11 +4,14 @@
     "description": "Chargify PHP API wrapper",
     "keywords": ["chargify", "payment", "credit card"],
     "homepage": "https://github.com/splashmedia/chargify-php",
+    "license": "MIT",
     "authors": [
-        {"name": "Daniel Cousineau", "email": "dcousineau@splashmedia.com"}
+        {"name": "Daniel Cousineau", "email": "dcousineau@splashmedia.com"},
+        {"name": "John Syrinek", "email": "jsyrinek@splashmedia.com"}
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-0": { "Splash\\Chargify": "lib/" }
