@@ -1,8 +1,22 @@
 Chargify PHP Wrapper
 ===
 
-This library is a simple wrapper for the Chargify (http://chargify.com/) payment service API. Documentation for the Chargify API can be found at http://docs.chargify.com/
+This library is a simple wrapper for the [Chargify](http://chargify.com/) payment platform. Documentation for the Chargify API can be found at http://docs.chargify.com/
 
+Installation
+---
+
+Installation is easiest with [Composer](http://getcomposer.org/). Just add the following to your requirements section:
+
+```json
+{
+    "require": {
+        "splashmedia/chargify-php": "dev-master"
+    }
+}
+```
+
+Alternatively you can autoload the library yourself as it complies with PSR-0 namespacing.
 
 Usage
 ---
@@ -12,7 +26,6 @@ The client is relatively straightforward to use. First you must initialize the c
 ```php
 <?php
 $client = new \Splash\Chargify\Client(APIKEY, DOMAIN, SITESHAREDKEY);
-
 ```
 
 Afterwards you may make calls to API endpoints as per the official chargify documentation:
