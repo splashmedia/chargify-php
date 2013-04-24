@@ -72,12 +72,15 @@ class Client {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
                 break;
             case 'PUT':
+                curl_setopt($ch, CURLOPT_POST, false);
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
                 break;
             case 'GET':
+                curl_setopt($ch, CURLOPT_POST, false);
                 break;
             default:
+                curl_setopt($ch, CURLOPT_POST, false);
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
         }
 

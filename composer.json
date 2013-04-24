@@ -1,7 +1,7 @@
 {
     "name": "splashmedia/chargify-php",
     "type": "library",
-    "description": "Chargify PHP API wrapper",
+    "description": "Chargify payment processor API for PHP 5.3+",
     "keywords": ["chargify", "payment", "credit card"],
     "homepage": "https://github.com/splashmedia/chargify-php",
     "license": "MIT",
