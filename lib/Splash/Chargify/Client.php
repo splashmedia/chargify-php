@@ -41,9 +41,9 @@ class Client {
         $this->setHydrator(new ResponseHydrator());
     }
 
-    public function api($uri, $data = array(), $method = 'GET', $hydrate=true) {
+    public function api($uri, $data = array(), $method = 'GET', $hydrate=true, $bust=false) {
         $key = $this->getCacheKey($uri, $data, $method, $hydrate);
-        if ($key) {
+        if ($key && !$bust) {
             // Can cache
             $r = $this->cache->get($key);
             if (false !== $r)
@@ -52,9 +52,10 @@ class Client {
 
         $r = $this->_execute_request($uri, $data, $method, $hydrate);
 
-        if ($key) {
-            $r = $this->cache($key, $r);
+        if ($key && $cached = $this->cache($key, $r)) {
+            return $cached;
         }
+
         return $r;
     }
 
