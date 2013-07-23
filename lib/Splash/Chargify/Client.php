@@ -217,7 +217,7 @@ class Client {
                 return 'chargify.products';
             }
 
-            if (0 === stripos($uri, 'product/')) {
+            if (0 === stripos($uri, 'products/')) {
                 $id = substr($uri, 9);
                 return 'chargify.product.' . $id;
             }
