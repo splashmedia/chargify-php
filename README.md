@@ -48,3 +48,8 @@ $subscription = $client->api('subscriptions', $data, 'POST');
 ```
 
 The API will automatically hydrate Chargify API responses into the domain objects located in `lib/Splash/Chargify/Resource/`. You can optionally pass a 4th parameter into the `api()` method to disable hydration if you would prefer to work with the raw response array.
+
+Memcached
+---
+
+Use memcache by including an instance of Memcached in the constructor of Splash\Chargify\Client. At this time, individual products and a complete list of products are cached.

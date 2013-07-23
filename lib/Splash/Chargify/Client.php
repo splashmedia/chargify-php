@@ -18,6 +18,7 @@ class Client {
     protected $domain;
     protected $site_shared_key;
     protected $curl;
+    protected $cache;
 
     /**
      * @var ResponseHydrator
@@ -30,17 +31,31 @@ class Client {
      * @param string|null $site_shared_key
      * @param resource|null $curl
      */
-    public function __construct($api_key, $domain, $site_shared_key = null, $curl = null) {
+    public function __construct($api_key, $domain, $site_shared_key = null, $curl = null, \Memcached $cache = null) {
         $this->api_key = $api_key;
         $this->domain = $domain;
         $this->site_shared_key = $site_shared_key;
         $this->curl = $curl;
+        $this->cache = $cache;
 
         $this->setHydrator(new ResponseHydrator());
     }
 
     public function api($uri, $data = array(), $method = 'GET', $hydrate=true) {
-        return $this->_execute_request($uri, $data, $method, $hydrate);
+        $key = $this->getCacheKey($uri, $data, $method, $hydrate);
+        if ($key) {
+            // Can cache
+            $r = $this->cache->get($key);
+            if (false !== $r)
+                return $r;
+        }
+
+        $r = $this->_execute_request($uri, $data, $method, $hydrate);
+
+        if ($key) {
+            $r = $this->cache($key, $r);
+        }
+        return $r;
     }
 
     /**
@@ -195,5 +210,27 @@ class Client {
         return $this->hydrator;
     }
 
+    protected function getCacheKey($uri, $data, $method, $hydrate) {
+        if (empty($data) && 'GET' === $method && true === $hydrate) {
+            if ('products' === $uri) {
+                return 'chargify.products';
+            }
 
+            if (0 === stripos($uri, 'products/')) {
+                $id = substr($uri, 9);
+                return 'chargify.product.' . $id;
+            }
+        }
+    }
+
+    protected function cache($key, $val)
+    {
+        $this->cache->set($key, $val);
+        if ('chargify.products' == $key) {
+            // Also cache individual products
+            foreach($val as $product) {
+                $this->cache('chargify.product.' . $product->id, $product);
+            }
+        }
+    }
 }
