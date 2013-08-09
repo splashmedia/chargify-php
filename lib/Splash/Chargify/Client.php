@@ -10,14 +10,24 @@
 
 namespace Splash\Chargify;
 
-use Splash\Chargify\Client\Response;
+use Splash\Chargify\Resource\ResourceAbstract;
 use Splash\Chargify\Exception as ChargifyException;
 
 class Client {
+
+    /** @var string */
     protected $api_key;
+
+    /** @var string */
     protected $domain;
+
+    /** @var string */
     protected $site_shared_key;
+
+    /** @var resource */
     protected $curl;
+
+    /** @var \Memcached */
     protected $cache;
 
     /**
@@ -29,41 +39,32 @@ class Client {
      * @param string $api_key
      * @param string $domain
      * @param string|null $site_shared_key
-     * @param resource|null $curl
      */
-    public function __construct($api_key, $domain, $site_shared_key = null, $curl = null, \Memcached $cache = null) {
+    public function __construct($api_key, $domain, $site_shared_key = null) {
         $this->api_key = $api_key;
         $this->domain = $domain;
         $this->site_shared_key = $site_shared_key;
-        $this->curl = $curl;
-        $this->cache = $cache;
-
         $this->setHydrator(new ResponseHydrator());
     }
 
     public function api($uri, $data = array(), $method = 'GET', $hydrate=true, $bust=false) {
-        $key = $this->getCacheKey($uri, $data, $method, $hydrate);
-        if ($key && !$bust) {
-            // Can cache
-            $r = $this->cache->get($key);
-            if (false !== $r)
-                return $r;
-        }
+        $r = $this->getCached($uri, $data, $method, $hydrate, $bust);
+        if (false !== $r) return $r;
 
         $r = $this->_execute_request($uri, $data, $method, $hydrate);
 
-        if ($key && $cached = $this->cache($key, $r)) {
-            return $cached;
-        }
+        $this->cache($uri, $data, $method, $hydrate, $r);
 
         return $r;
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $data
      * @param string $method
-     * @return Client\Response
+     * @param boolean $hydrate
+     * @return ResourceAbstract|array
+     * @throws Exception
      */
     protected function _execute_request($uri, $data = array(), $method = 'GET', $hydrate=true) {
         $ch = $this->getCurl();
@@ -135,7 +136,7 @@ class Client {
 
     /**
      * @param resource $curl
-     * @return Client
+     * @return $this
      */
     public function setCurl($curl) {
         $this->curl = $curl;
@@ -161,6 +162,15 @@ class Client {
         }
 
         return $this->curl;
+    }
+
+    /**
+     * @param \Memcached $memcached
+     * @return $this
+     */
+    public function setMemcached(\Memcached $memcached) {
+        $this->cache = $memcached;
+        return $this;
     }
 
     /**
@@ -211,6 +221,34 @@ class Client {
         return $this->hydrator;
     }
 
+    protected function getCached($uri, $data, $method, $hydrate, $bust)
+    {
+        if ($bust || !$this->cache) return false;
+
+        $key = $this->getCacheKey($uri, $data, $method, $hydrate);
+        if (!$key) return false;
+
+        return $this->cache->get($key);
+    }
+
+    protected function cache($uri, $data, $method, $hydrate, $val)
+    {
+        if (!$this->cache) return false;
+
+        $key = $this->getCacheKey($uri, $data, $method, $hydrate);
+        if (!$key) return false;
+
+        $this->cache->set($key, $val);
+        if ('chargify.products' == $key) {
+            // Also cache individual products
+            foreach($val as $product) {
+                $this->cache->set('chargify.product.' . $product->id, $product);
+            }
+        }
+
+        return $val;
+    }
+
     protected function getCacheKey($uri, $data, $method, $hydrate) {
         if (empty($data) && 'GET' === $method && true === $hydrate) {
             if ('products' === $uri) {
@@ -222,16 +260,7 @@ class Client {
                 return 'chargify.product.' . $id;
             }
         }
-    }
 
-    protected function cache($key, $val)
-    {
-        $this->cache->set($key, $val);
-        if ('chargify.products' == $key) {
-            // Also cache individual products
-            foreach($val as $product) {
-                $this->cache('chargify.product.' . $product->id, $product);
-            }
-        }
+        return null;
     }
 }
