@@ -1,11 +1,10 @@
 Chargify PHP Wrapper
 ===
-
-This library is a simple wrapper for the [Chargify](http://chargify.com/) payment platform. Documentation for the Chargify API can be found at http://docs.chargify.com/
+This library is a simple wrapper for the [Chargify](http://chargify.com/) payment platform. Documentation for the
+Chargify API can be found at http://docs.chargify.com/
 
 Installation
 ---
-
 Installation is easiest with [Composer](http://getcomposer.org/). Just add the following to your requirements section:
 
 ```json
@@ -20,7 +19,6 @@ Alternatively you can autoload the library yourself as it complies with PSR-0 na
 
 Usage
 ---
-
 The client is relatively straightforward to use. First you must initialize the connection:
 
 ```php
@@ -47,9 +45,11 @@ $data = array(
 $subscription = $client->api('subscriptions', $data, 'POST');
 ```
 
-The API will automatically hydrate Chargify API responses into the domain objects located in `lib/Splash/Chargify/Resource/`. You can optionally pass a 4th parameter into the `api()` method to disable hydration if you would prefer to work with the raw response array.
+The API will automatically hydrate Chargify API responses into the domain objects located in
+`lib/Splash/Chargify/Resource/`. You can optionally pass a 4th parameter into the `api()` method to disable hydration
+if you would prefer to work with the raw response array.
 
 Memcached
 ---
-
-Use memcache by including an instance of Memcached in the constructor of Splash\Chargify\Client. At this time, individual products and a complete list of products are cached.
+Use memcache by calling Client::setMemcached() with an instance of the class Memcached. At this time, individual
+products and a complete list of products are cached.
