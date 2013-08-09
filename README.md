@@ -1,7 +1,7 @@
 Chargify PHP Wrapper
 ===
 This library is a simple wrapper for the [Chargify](http://chargify.com/) payment platform. Documentation for the
-Chargify API can be found at http://docs.chargify.com/
+Chargify API can be found at [http://docs.chargify.com/](http://docs.chargify.com/).
 
 Installation
 ---
@@ -51,5 +51,5 @@ if you would prefer to work with the raw response array.
 
 Memcached
 ---
-Use memcache by calling Client::setMemcached() with an instance of the class Memcached. At this time, individual
+Use memcache by calling `Client::setMemcached()` with an instance of the class Memcached. At this time, individual
 products and a complete list of products are cached.
