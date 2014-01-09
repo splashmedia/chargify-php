@@ -5,7 +5,7 @@
     "keywords": ["chargify", "payment", "credit card"],
     "license": "MIT",
     "authors": [
-        {"name": "Bjørnar Helland", "email": "bh@keyteq.no"},
+        {"name": "Bjørnar Helland", "email": "bh@keyteq.no"}
     ],
     "require": {
         "php": ">=5.3.2",
