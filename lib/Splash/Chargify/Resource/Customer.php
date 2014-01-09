@@ -26,6 +26,7 @@ class Customer extends ResourceAbstract {
     public $phone;
     public $created_at;
     public $updated_at;
+    public $vat_number;
 
     public function getName() { return 'customer'; }
     public static function hydrateFilter() { return array(
