@@ -87,5 +87,8 @@ class Subscription extends ResourceAbstract {
         'current_period_ends_at' => function($value) { return new \DateTime($value); },
         'trial_ended_at' => function($value) { return new \DateTime($value); },
         'trial_started_at' => function($value) { return new \DateTime($value); },
+        'delayed_cancel_at' => function($value) { return new \DateTime($value); },
+        'canceled_at' => function($value) { return new \DateTime($value); },
+        'next_assessment_at' => function($value) { return new \DateTime($value); },
     ); }
 }
