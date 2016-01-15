@@ -149,7 +149,7 @@ class Client {
     public function getCurl() {
         if ($this->curl === null) {
             $this->curl = curl_init();
-            
+
             curl_setopt_array($this->curl, array(
                 CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_SSL_VERIFYHOST => 2,
@@ -158,6 +158,9 @@ class Client {
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_CONNECTTIMEOUT => 10,
                 CURLOPT_TIMEOUT        => 30,
+                //Using integer value instead constant because in CentOS
+                //Curl uses NSS and there CURL_SSLVERSION_TLSv1_2 is undefined
+                CURLOPT_SSLVERSION     => 6,
             ));
         }
 
